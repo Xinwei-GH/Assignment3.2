@@ -50,7 +50,7 @@ resource "aws_s3_bucket_versioning" "s3_versioning" {
 
 # ✅ Public Access Block
 resource "aws_s3_bucket_public_access_block" "s3_public_access" {
-  bucket = aws_s3_bucket.s3_tf.id
+  bucket                  = aws_s3_bucket.s3_tf.id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
@@ -59,7 +59,7 @@ resource "aws_s3_bucket_public_access_block" "s3_public_access" {
 
 # ✅ Access Logging
 resource "aws_s3_bucket_logging" "s3_logging" {
-  bucket = aws_s3_bucket.s3_tf.id
+  bucket        = aws_s3_bucket.s3_tf.id
   target_bucket = "arn:aws:s3:::your-logging-bucket"
   target_prefix = "log/"
 }
@@ -83,7 +83,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "s3_lifecycle" {
     status = "Enabled"
 
     abort_incomplete_multipart_upload {
-      days_after_initiation = 7  # Adjust as needed
+      days_after_initiation = 7 # Adjust as needed
     }
   }
 }
@@ -99,7 +99,7 @@ resource "aws_s3_bucket_notification" "s3_notifications" {
 
   topic {
     topic_arn = aws_sns_topic.s3_notifications_topic.arn
-    events    = ["s3:ObjectCreated:*"]  # Modify event types as needed
+    events    = ["s3:ObjectCreated:*"] # Modify event types as needed
   }
 }
 
@@ -111,7 +111,7 @@ resource "aws_sns_topic_policy" "sns_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect = "Allow",
+        Effect    = "Allow",
         Principal = { Service = "s3.amazonaws.com" },
         Action    = "SNS:Publish",
         Resource  = aws_sns_topic.s3_notifications_topic.arn,
