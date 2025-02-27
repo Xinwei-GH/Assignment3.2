@@ -30,7 +30,7 @@ resource "aws_s3_bucket" "s3_tf" {
   bucket = "${replace(local.name_prefix, "/[^a-z0-9-]/", "")}-s3-tf-bkt-${local.account_id}"
 }
 
-# ✅ Encryption
+#  Encryption (KMS)
 resource "aws_s3_bucket_server_side_encryption_configuration" "s3_encryption" {
   bucket = aws_s3_bucket.s3_tf.id
   rule {
@@ -40,7 +40,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "s3_encryption" {
   }
 }
 
-# ✅ Versioning
+#  Versioning
 resource "aws_s3_bucket_versioning" "s3_versioning" {
   bucket = aws_s3_bucket.s3_tf.id
   versioning_configuration {
@@ -48,7 +48,7 @@ resource "aws_s3_bucket_versioning" "s3_versioning" {
   }
 }
 
-# ✅ Public Access Block
+#  Public Access Block
 resource "aws_s3_bucket_public_access_block" "s3_public_access" {
   bucket                  = aws_s3_bucket.s3_tf.id
   block_public_acls       = true
@@ -57,14 +57,14 @@ resource "aws_s3_bucket_public_access_block" "s3_public_access" {
   restrict_public_buckets = true
 }
 
-# ✅ Access Logging
+#  Access Logging
 resource "aws_s3_bucket_logging" "s3_logging" {
   bucket        = aws_s3_bucket.s3_tf.id
   target_bucket = "arn:aws:s3:::your-logging-bucket"
   target_prefix = "log/"
 }
 
-# ✅ Lifecycle Policy
+#  Lifecycle Policy
 resource "aws_s3_bucket_lifecycle_configuration" "s3_lifecycle" {
   bucket = aws_s3_bucket.s3_tf.id
   rule {
@@ -73,14 +73,5 @@ resource "aws_s3_bucket_lifecycle_configuration" "s3_lifecycle" {
     noncurrent_version_expiration {
       noncurrent_days = 30
     }
-  }
-}
-
-# ✅ Event Notifications
-resource "aws_s3_bucket_notification" "s3_notifications" {
-  bucket = aws_s3_bucket.s3_tf.id
-  lambda_function {
-    lambda_function_arn = aws_lambda_function.s3_event_handler.arn
-    events              = ["s3:ObjectCreated:*"]
   }
 }
