@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "ap-southeast-1"
-}
-
 terraform {
   required_version = ">= 1.3.0"
 
@@ -10,6 +6,17 @@ terraform {
     key    = "xinwei-s3-tf-ci.tfstate" # Ensure this is unique
     region = "ap-southeast-1"
   }
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 4.0" # Ensure a compatible version
+    }
+  }
+}
+
+provider "aws" {
+  region = "ap-southeast-1"
 }
 
 data "aws_caller_identity" "current" {}
