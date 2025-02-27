@@ -88,9 +88,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "s3_lifecycle" {
   }
 }
 
-# ✅ SNS Topic for S3 Event Notifications
+# ✅ SNS Topic for S3 Event Notifications (WITH ENCRYPTION)
 resource "aws_sns_topic" "s3_notifications_topic" {
-  name = "s3-event-notifications"
+  name              = "s3-event-notifications"
+  kms_master_key_id = "alias/aws/sns" # 🔹 Encrypts SNS messages
 }
 
 # ✅ S3 Event Notification to SNS Topic
@@ -99,7 +100,7 @@ resource "aws_s3_bucket_notification" "s3_notifications" {
 
   topic {
     topic_arn = aws_sns_topic.s3_notifications_topic.arn
-    events    = ["s3:ObjectCreated:*"] # Modify event types as needed
+    events    = ["s3:ObjectCreated:*"]
   }
 }
 
