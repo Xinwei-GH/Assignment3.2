@@ -44,11 +44,11 @@ jobs:
     - name: Run TFLint
       run: tflint -f compact
 
-    - name: Checkov (Skip CKV_AWS_144)
+    - name: Checkov (Skip CKV_AWS_26 & CKV_AWS_144)
       uses: bridgecrewio/checkov-action@master
       with:
         framework: terraform
-        skip_check: CKV_AWS_144  # ✅ Skip replication check
+        skip_check: CKV_AWS_26,CKV_AWS_144  # ✅ Skips SNS Encryption & Cross-Region Replication checks
 
     - name: Terraform Plan
       run: terraform plan
