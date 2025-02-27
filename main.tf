@@ -22,10 +22,11 @@ terraform {
 data "aws_caller_identity" "current" {}
 
 locals {
-  name_prefix = split("/", "$data.aws_caller_identity.current.arn")[1]
+  arn_parts   = split("/", data.aws_caller_identity.current.arn)
+  name_prefix = length(arn_parts) > 1 ? arn_parts[1] : arn_parts[0] # Fallback if no "/"
   account_id  = data.aws_caller_identity.current.account_id
 }
 
 resource "aws_s3_bucket" "s3_tf" {
-  bucket = "$local.name_prefix-s3-tf-bkt-$local.account_id"
+  bucket = "${local.name_prefix}-s3-tf-bkt-${local.account_id}"
 }
